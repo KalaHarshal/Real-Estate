@@ -11,6 +11,12 @@ export const register = async (req, res) => {
 };
 
 export const login = (req, res) => {
+  const { email, password } = req.body;
+  try {    // Here you would typically verify the user's credentials and generate a token
+    res.status(200).json({ message: 'User logged in successfully!' });
+  } catch (error) {
+    res.status(500).json({ error: 'Error logging in user' });
+  }
   res.send('User logged in successfully!');
 };      
 
