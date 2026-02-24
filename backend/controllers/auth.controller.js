@@ -74,9 +74,11 @@ export const login = async (req, res) => {
       maxAge: 24 * 60 * 60 * 1000,
     });
 
-    return res.status(200).json({
-      message: "User logged in successfully!",
-    });
+    // 👇 ADD THIS: Separate password from the rest of the user data
+    const { password: userPassword, ...userInfo } = user;
+
+    // 👇 UPDATE THIS: Send userInfo instead of just a message
+    return res.status(200).json(userInfo);
 
   } catch (error) {
     console.error(error);
