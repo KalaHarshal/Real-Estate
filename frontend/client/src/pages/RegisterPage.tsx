@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 import { apiRequest } from "../lib/apiRequest";
 
 // Matches your backend req.body exactly
@@ -27,9 +28,13 @@ export const RegisterPage = () => {
       
       // On success, redirect to login page
       navigate("/login");
-    } catch (err: any) {
-      // Maps to your backend's res.status(400).json({ error: "Email already exists" })
-      setError(err.response?.data?.error || "Registration failed.");
+    } catch (err: unknown) {
+      const fallback = "Registration failed.";
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.error || fallback);
+      } else {
+        setError(fallback);
+      }
     } finally {
       setIsLoading(false);
     }

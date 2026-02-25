@@ -1,21 +1,7 @@
-import express from 'express';
+import express from "express";
+import { getPosts } from "../controllers/post.controller.js";
 
 const router = express.Router();
-
-router.get('/', (req, res) => {
-  res.send('Hello from the post route!');
-});
-
-router.post('/', (req, res) => {
-  res.send('Post created successfully!');
-});
-
-router.put('/:id', (req, res) => {
-  res.send(`Post with id ${req.params.id} updated successfully!`);
-});
-
-router.delete('/:id', (req, res) => {
-  res.send(`Post with id ${req.params.id} deleted successfully!`);
-});
+router.get("/", getPosts); // 🔥 Your API endpoint is now live at http://localhost:8800/api/posts
 
 export default router;

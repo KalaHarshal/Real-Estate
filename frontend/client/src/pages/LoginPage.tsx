@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 import { apiRequest } from "../lib/apiRequest";
 import { useAuthStore } from "../features/auth/store/authStore";
 
@@ -27,9 +28,13 @@ export const LoginPage = () => {
       // Because of our backend tweak, response.data now holds the user object!
       updateUser(response.data); 
       navigate("/");
-    } catch (err: any) {
-      // Your backend sends "error: ..." so we map to err.response.data.error
-      setError(err.response?.data?.error || "Failed to login.");
+    } catch (err: unknown) {
+      const fallback = "Failed to login.";
+      if (axios.isAxiosError(err)) {
+        setError(err.response?.data?.error || fallback);
+      } else {
+        setError(fallback);
+      }
     } finally {
       setIsLoading(false);
     }

@@ -1,17 +1,37 @@
+import { useLoaderData } from "react-router-dom";
+import { Card } from "../components/shared/Card";
+import { Filter } from "../components/shared/Filter"; // 🔥 Import the Filter
+import { Map } from "../components/shared/Map"
+import type { Post } from "../types/post";
+
 export const ListPage = () => {
+  // This pulls the real data from your Express backend API!
+  const posts = useLoaderData<Post[] | undefined>() ?? [];
+
   return (
-    <div className="flex flex-col lg:flex-row gap-8 h-full">
-      {/* Left side: List of cards */}
-      <div className="flex-1 flex flex-col gap-4 overflow-y-auto">
-        <h2 className="text-2xl font-bold">Search Results</h2>
-        <div className="p-4 bg-white shadow rounded">Property Card Placeholder</div>
-        <div className="p-4 bg-white shadow rounded">Property Card Placeholder</div>
-      </div>
+    <div className="flex flex-col lg:flex-row gap-8 h-[calc(100vh-100px)]">
       
-      {/* Right side: Map */}
-      <div className="flex-1 bg-gray-200 rounded-xl hidden lg:flex items-center justify-center text-gray-400 min-h-[500px]">
-        Mapbox Component Placeholder
+      {/* LEFT SIDE: List & Filters */}
+      <div className="flex-[3] flex flex-col gap-4 overflow-y-auto pr-2 pb-10 custom-scrollbar">
+        
+        {/* 🔥 Drop the Filter component right here */}
+        <Filter />
+        
+        {/* Loop through the API data and render Cards */}
+        {posts.map((post) => (
+          <Card key={post.id} item={post} />
+        ))}
+        
+        {posts.length === 0 && <p>No properties found. Is your backend running?</p>}
       </div>
+
+      {/* RIGHT SIDE: Map */}
+      <div className="flex-[2] rounded-xl border border-dashed border-gray-200 hidden lg:flex">
+        <div className="w-full h-[calc(100vh-120px)]">
+          <Map items={posts} />
+        </div>
+      </div>
+
     </div>
   );
 };
